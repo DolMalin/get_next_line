@@ -6,7 +6,7 @@
 /*   By: pdal-mol <dolmalinn@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:30:45 by pdal-mol          #+#    #+#             */
-/*   Updated: 2021/11/18 13:44:34 by pdal-mol         ###   ########.fr       */
+/*   Updated: 2021/11/18 15:10:33 by pdal-mol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,15 @@ char	*get_next_line(int fd)
 	int			ret;
 	char		*temp;
 
-	if (fd < 0 || fd > 1024 || !fd || BUFFER_SIZE < 1)
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1)
 		return (NULL);
 	ret = 1;
 	while (ret > 0)
 	{
 		ret = read(fd, buffer, BUFFER_SIZE);
-		buffer[ret] = '\0';
 		if ((ret == -1) || (ret == 0 && str == NULL))
 			return (NULL);
+		buffer[ret] = '\0';
 		if (!str)
 			str = ft_strndup(buffer, ft_strlen(buffer));
 		else
