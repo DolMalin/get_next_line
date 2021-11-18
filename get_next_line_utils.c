@@ -6,7 +6,7 @@
 /*   By: pdal-mol <dolmalinn@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 11:00:50 by pdal-mol          #+#    #+#             */
-/*   Updated: 2021/11/18 13:44:10 by pdal-mol         ###   ########.fr       */
+/*   Updated: 2021/11/18 15:54:10 by pdal-mol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,22 +59,19 @@ char	*ft_strjoin(const char *str1, const char *str2)
 	char	*output;
 	size_t	len;
 	size_t	i;
+	size_t	j;
 
-	i = 0;
+	i = (j = -1);
 	if (!str1 || !str2)
 		return (NULL);
 	len = ft_strlen(str1) + ft_strlen(str2);
 	output = malloc(sizeof(char) * (len + 1));
 	if (!output)
 		return (NULL);
-	while (i < len)
-	{
-		if (i < ft_strlen(str1))
-			output[i] = str1[i];
-		else
-			output[i] = str2[i - ft_strlen(str1)];
-		i++;
-	}
-	output[i] = '\0';
+	while (str1[++i])
+		output[i] = str1[i];
+	while (str2[++j])
+		output[i + j] = str2[j];
+	output[len] = '\0';
 	return (output);
 }

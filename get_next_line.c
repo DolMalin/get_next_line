@@ -6,11 +6,29 @@
 /*   By: pdal-mol <dolmalinn@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:30:45 by pdal-mol          #+#    #+#             */
-/*   Updated: 2021/11/18 15:30:36 by pdal-mol         ###   ########.fr       */
+/*   Updated: 2021/11/18 16:07:02 by pdal-mol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*ft_strdup(const char *src)
+{
+	size_t	i;
+	char	*copy_str;
+
+	i = 0;
+	copy_str = malloc(sizeof(char) * (ft_strlen(src) + 1));
+	if (!copy_str || !src)
+		return (NULL);
+	while (src[i])
+	{
+		copy_str[i] = src[i];
+		i++;
+	}
+	copy_str[i] = '\0';
+	return (copy_str);
+}
 
 static char	*parse_str(char **str)
 {
@@ -18,7 +36,7 @@ static char	*parse_str(char **str)
 	char	*output;
 
 	temp = *str;
-	*str = ft_strndup(ft_strchr(temp, '\n') + 1, ft_strlen(temp));
+	*str = ft_strdup(ft_strchr(temp, '\n') + 1);
 	output = ft_strndup(temp, ft_strlen(temp) - ft_strlen(*str));
 	free(temp);
 	return (output);
@@ -36,9 +54,9 @@ static void	addback_static(char **str, char *buffer)
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
-	static char	*str;
+	static char	*str = NULL;
 	int			ret;
-	char		*temp = NULL;
+	char		*temp;
 
 	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1)
 		return (NULL);
@@ -50,18 +68,16 @@ char	*get_next_line(int fd)
 			return (NULL);
 		buffer[ret] = '\0';
 		if (!str)
-			str = ft_strndup(buffer, ft_strlen(buffer));
+			str = ft_strdup(buffer);
 		else
 			addback_static(&str, buffer);
 		if (ft_strchr(str, '\n'))
-			break ;
+			return (parse_str(&str));
 	}
-	if (ret != 0)
-		return (parse_str(&str));
 	if (str && !str[0])
 		temp = NULL;
 	else
-		temp = ft_strndup(str, ft_strlen(str));
+		temp = ft_strdup(str);
 	free(str);
 	str = NULL;
 	return (temp);
