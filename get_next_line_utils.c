@@ -6,7 +6,7 @@
 /*   By: pdal-mol <dolmalinn@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 11:00:50 by pdal-mol          #+#    #+#             */
-/*   Updated: 2021/11/17 13:17:23 by pdal-mol         ###   ########.fr       */
+/*   Updated: 2021/11/18 13:44:10 by pdal-mol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ char	*ft_strndup(const char *src, int n)
 
 	i = 0;
 	copy_str = malloc(sizeof(char) * (ft_strlen(src) + 1));
-	if (!copy_str)
-		return (0);
+	if (!copy_str || !src)
+		return (NULL);
 	while (src[i] && i < (size_t)n)
 	{
 		copy_str[i] = src[i];

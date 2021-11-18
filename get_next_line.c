@@ -6,21 +6,11 @@
 /*   By: pdal-mol <dolmalinn@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:30:45 by pdal-mol          #+#    #+#             */
-/*   Updated: 2021/11/17 15:08:12 by pdal-mol         ###   ########.fr       */
+/*   Updated: 2021/11/18 13:44:34 by pdal-mol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-size_t	find_endline(const char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] && str[i] != '\n')
-		i++;
-	return (i);
-}
 
 static char	*parse_str(char **str)
 {
@@ -48,6 +38,7 @@ char	*get_next_line(int fd)
 	char		buffer[BUFFER_SIZE + 1];
 	static char	*str = NULL;
 	int			ret;
+	char		*temp;
 
 	if (fd < 0 || fd > 1024 || !fd || BUFFER_SIZE < 1)
 		return (NULL);
@@ -55,12 +46,9 @@ char	*get_next_line(int fd)
 	while (ret > 0)
 	{
 		ret = read(fd, buffer, BUFFER_SIZE);
-		if (ret < 1)
-		{
-			free(str);
-			return (NULL);
-		}
 		buffer[ret] = '\0';
+		if ((ret == -1) || (ret == 0 && str == NULL))
+			return (NULL);
 		if (!str)
 			str = ft_strndup(buffer, ft_strlen(buffer));
 		else
@@ -68,7 +56,10 @@ char	*get_next_line(int fd)
 		if (ft_strchr(str, '\n'))
 			break ;
 	}
-	if (ft_strchr(str, '\n'))
+	if (ret != 0)
 		return (parse_str(&str));
-	return (str);
+	temp = ft_strndup(str, ft_strlen(str));
+	free(str);
+	str = NULL;
+	return (temp);
 }
