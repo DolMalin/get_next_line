@@ -7,12 +7,11 @@ int	main(int ac, char **av)
 	
 	(void)ac;
 	fd = open(av[1], O_RDONLY);
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
+	char *str = get_next_line(fd);
+	while (str)
+	{
+		printf("%s", str);
+		str = get_next_line(fd);
+	}
 	return (0);
 }

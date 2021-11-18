@@ -6,7 +6,7 @@
 /*   By: pdal-mol <dolmalinn@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:30:45 by pdal-mol          #+#    #+#             */
-/*   Updated: 2021/11/18 15:10:33 by pdal-mol         ###   ########.fr       */
+/*   Updated: 2021/11/18 15:30:36 by pdal-mol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ static void	addback_static(char **str, char *buffer)
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
-	static char	*str = NULL;
+	static char	*str;
 	int			ret;
-	char		*temp;
+	char		*temp = NULL;
 
 	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1)
 		return (NULL);
@@ -58,7 +58,10 @@ char	*get_next_line(int fd)
 	}
 	if (ret != 0)
 		return (parse_str(&str));
-	temp = ft_strndup(str, ft_strlen(str));
+	if (str && !str[0])
+		temp = NULL;
+	else
+		temp = ft_strndup(str, ft_strlen(str));
 	free(str);
 	str = NULL;
 	return (temp);
