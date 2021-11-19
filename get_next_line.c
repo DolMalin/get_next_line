@@ -6,29 +6,11 @@
 /*   By: pdal-mol <dolmalinn@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:30:45 by pdal-mol          #+#    #+#             */
-/*   Updated: 2021/11/18 16:07:02 by pdal-mol         ###   ########.fr       */
+/*   Updated: 2021/11/19 17:05:56 by pdal-mol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-char	*ft_strdup(const char *src)
-{
-	size_t	i;
-	char	*copy_str;
-
-	i = 0;
-	copy_str = malloc(sizeof(char) * (ft_strlen(src) + 1));
-	if (!copy_str || !src)
-		return (NULL);
-	while (src[i])
-	{
-		copy_str[i] = src[i];
-		i++;
-	}
-	copy_str[i] = '\0';
-	return (copy_str);
-}
 
 static char	*parse_str(char **str)
 {
@@ -42,13 +24,18 @@ static char	*parse_str(char **str)
 	return (output);
 }
 
-static void	addback_static(char **str, char *buffer)
+static void	add_static(char **str, char	*buffer)
 {
 	char	*temp;
 
-	temp = *str;
-	*str = ft_strjoin(temp, buffer);
-	free(temp);
+	if (*str)
+	{
+		temp = *str;
+		*str = ft_strjoin(temp, buffer);
+		free(temp);
+		return ;
+	}
+	*str = ft_strdup(buffer);
 }
 
 char	*get_next_line(int fd)
@@ -67,10 +54,7 @@ char	*get_next_line(int fd)
 		if ((ret == -1) || (ret == 0 && str == NULL))
 			return (NULL);
 		buffer[ret] = '\0';
-		if (!str)
-			str = ft_strdup(buffer);
-		else
-			addback_static(&str, buffer);
+		add_static(&str, buffer);
 		if (ft_strchr(str, '\n'))
 			return (parse_str(&str));
 	}
