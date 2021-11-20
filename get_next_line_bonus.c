@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pdal-mol <dolmalinn@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/17 10:30:45 by pdal-mol          #+#    #+#             */
-/*   Updated: 2021/11/20 11:38:06 by pdal-mol         ###   ########.fr       */
+/*   Created: 2021/11/20 11:38:57 by pdal-mol          #+#    #+#             */
+/*   Updated: 2021/11/20 11:47:27 by pdal-mol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	add_static(char **str, char	*buffer)
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
-	static char	*str = NULL;
+	static char	*str[OPEN_MAX];
 	int			ret;
 	char		*temp;
 
@@ -51,18 +51,18 @@ char	*get_next_line(int fd)
 	while (ret > 0)
 	{
 		ret = read(fd, buffer, BUFFER_SIZE);
-		if ((ret == -1) || (ret == 0 && str == NULL))
+		if ((ret == -1) || (ret == 0 && str[fd] == NULL))
 			return (NULL);
 		buffer[ret] = '\0';
-		add_static(&str, buffer);
-		if (ft_strchr(str, '\n'))
-			return (parse_str(&str));
+		add_static(&str[fd], buffer);
+		if (ft_strchr(str[fd], '\n'))
+			return (parse_str(&str[fd]));
 	}
-	if (str && !str[0])
+	if (str[fd] && !str[fd][0])
 		temp = NULL;
 	else
-		temp = ft_strdup(str);
-	free(str);
-	str = NULL;
+		temp = ft_strdup(str[fd]);
+	free(str[fd]);
+	str[fd] = NULL;
 	return (temp);
 }
